@@ -28,33 +28,71 @@ Scope Creeps
 						Path Health Matrix
 					</div>
 					<div class="panel-body">
-            <table class="table" data-toggle="table" data-height="518" data-sort-name="date" data-sort-order="desc" data-show-columns="true" data-pagination="true" data-page-list="[10, 20, 50]" data-search="true">
-							<thead>
-							<tr>
-                  <th data-sortable="false"></th>
-                  {% for path in path_details.keys() %}
-                  <th data-sortable="false">{{ path }}</th>
-                  {% endfor %}
-							</tr>
-							</thead>
-							<tbody>
-							{% for path, details in path_details.items() %}
-                <tr>
-                  <td> {{ path }} </td>
-									{% for sub_path in path_details.keys() %}
-										{% set health = details[sub_path] %}
-										{% set color = "green" %}
-										{% if health < 70 %}
-											{% set color = "orange" %}
-										{% elif health < 40 %}
-											{% set color = "red" %}
-										{% endif %}
-										<td style="color: {{ color }}">{{ health }}</td>
-                  {% endfor %}
+						<div class="col-lg-6 col-md-12">
+							<img
+								src="{{ url_for('static', filename='diagram.png')}}"
+								width="100%"
+								align="middle"
+							/>
+						</div>
+						<div class="col-lg-6 col-md-12">
+						  <h2>Path Capacity</h2>
+	            <table class="table">
+								<thead>
+								<tr>
+	                  <th data-sortable="false"></th>
+	                  {% for leaf in headers %}
+	                  <th data-sortable="false">{{ leaf }}</th>
+	                  {% endfor %}
 								</tr>
+								</thead>
+								<tbody>
+								{% for leaf, details in leaf_metrics.items() %}
+	                <tr>
+	                  <th> {{ leaf }} </th>
+										{% for far_side, metrics in leaf_metrics.items() %}
+											{% if leaf == far_side %}
+												<td></td>
+										  {% elif leaf in metrics.keys() %}
+												{% set health = metrics[leaf] %}
+												{% set color = "primary" %}
+												{% if health < 20 %}
+													{% set color = "warning" %}
+												{% elif health < 7 %}
+													{% set color = "danger" %}
+												{% endif %}
+													<td>
+														<a class="btn btn-{{color}}"
+															role="button"
+															data-toggle="collapse"
+															href="#{{leaf}}-{{far_side}}"
+															aria-expanded="false"
+															aria-controls="{{leaf}}-{{far_side}}">
+														{{ health }}
+														</a>
+													</td>
+											{% else %}
+												<td>---</td>
+											{% endif %}
+										{% endfor %}
+									</tr>
+								{% endfor %}
+								</tbody>
+							</table>
+							{% for pair in capacities %}
+								{% set near, far, details = pair %}
+								<div class="collapse" id="{{near}}-{{far}}">
+									<div class="well">
+									  <h3>{{ near }} --> {{ far }}</h3>
+									  {% for node, capacity in details.items() %}
+											{{ node }}
+											{{ capacity }}
+											</br>
+										{% endfor %}
+									</div>
+								</div>
 							{% endfor %}
-							</tbody>
-						</table>
+						</div>
 					</div>
 				</div>
 			</div>
