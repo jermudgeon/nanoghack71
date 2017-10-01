@@ -1,4 +1,10 @@
 host1	leaf1	10
+leaf2	spine1	10
+spine1	leaf2	10
+leaf2	spine2	10
+spine2	leaf2	10
+host3	leaf3	10
+host3	leaf3	10
 host3	leaf3	20
 leaf1	host1	5
 leaf1	spine1	5
