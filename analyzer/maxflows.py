@@ -3,27 +3,35 @@
 __author__ = "John W. O'Brien <obrienjw@upenn.edu>"
 
 
+import random
+
 import networkx
 import requests
+
+
+state_names = [
+    'nominal',
+    'reversed',
+    'degraded',
+]
+
+
+def load_wedges(fname):
+    with open(fname) as f:
+        wedges = []
+        for line in f:
+            u, v, c = line.strip().split('\t')
+            c = int(c)
+            wedges.append(tuple((u, v, c)))
+    return wedges
 
 
 def compute_max_flows():
     G = networkx.DiGraph()
 
     # load current topology and capacities from DB
-    # XXX dummy data
-    wedges = [
-        ('leaf1', 'spine1', 9),
-        ('spine1', 'leaf1', 10),
-        ('leaf1', 'spine2', 8),
-        ('spine2', 'leaf1', 11),
-        ('spine1', 'vmx8', 15),
-        ('spine1', 'vmx9', 5),
-        ('vmx8', 'spine3', 10),
-        ('vmx9', 'spine3', 12),
-        ('spine3', 'leaf3', 100),
-        # all the rest of the links and capacities here
-    ]
+    state = random.choice(state_names)
+    wedges = load_wedges(state + '.tsv')
 
     G.add_weighted_edges_from(wedges, weight='capacity')
 
