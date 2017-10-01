@@ -38,17 +38,10 @@ celery = make_celery(flask_app)
 
 @celery.task()
 def compute_max_flows():
-    # load current topology and capacities from DB
-
     G = networkx.DiGraph()
-    # XXX dummy data
-    leafs = ['leaf{}'.format(i) for i in range(1,5)]
-    spines = ['spine{}'.format(i) for i in range(1,5)]
-    vmxes = ['vmx{}'.format(i) for i in range(7,10)]
-    G.add_nodes_from(leafs)
-    G.add_nodes_from(spines)
-    G.add_nodes_from(vmxes)
 
+    # load current topology and capacities from DB
+    # XXX dummy data
     wedges = [
         ('leaf1', 'spine1', 9),
         ('spine1', 'leaf1', 10),
@@ -59,19 +52,25 @@ def compute_max_flows():
         ('vmx8', 'spine3', 10),
         ('vmx9', 'spine3', 12),
         ('spine3', 'leaf3', 100),
-        # all the rest of the links here
+        # all the rest of the links and capacities here
     ]
 
     G.add_weighted_edges_from(wedges, weight='capacity')
 
     # iterate over pairwise endpoints
-        for u in G:
-            if 'leaf' not in u:
+    for u in G:
+        if 'leaf' not in u:
+            continue
+        for v in G:
+            if 'leaf' not in v or v == u:
                 continue
-            for v in G:
-                if 'leaf' not in v or v == u:
-                    continue
-                # compute max flow and flow dict
-                f, d = networkx.algorithms.flow.maximum_flow(G, u, v)
-                
-                # XXX store results back to DB
+            # compute max flow and flow dict
+            f, d = networkx.algorithms.flow.maximum_flow(G, u, v)
+            print(u, v, f, d)
+
+            # XXX store results back to DB
+            """
+            Two tables:
+                1) timestamp, u, v, f
+                2) timestamp, u, v, d as str
+            """
