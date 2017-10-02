@@ -3,6 +3,7 @@
 __author__ = "John W. O'Brien <obrienjw@upenn.edu>"
 
 
+import sys
 import random
 import json
 
@@ -53,7 +54,11 @@ def compute_max_flows(wedges):
 
 if __name__ == '__main__':
     # load current topology and capacities from DB
-    state = random.choice(state_names)
+    try:
+        state = sys.argv[1]
+    except IndexError:
+        state = random.choice(state_names)
+        print(state)
     wedges = load_wedges(state + '.tsv')
 
     max_flows, capacities = compute_max_flows(wedges)
