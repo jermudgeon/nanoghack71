@@ -58,7 +58,8 @@ Scope Creeps
 												{% set color = "primary" %}
 												{% if health < 20 %}
 													{% set color = "warning" %}
-												{% elif health < 7 %}
+												{% endif %}
+												{% if health < 7 %}
 													{% set color = "danger" %}
 												{% endif %}
 													<td>
@@ -67,7 +68,8 @@ Scope Creeps
 															data-toggle="collapse"
 															href="#{{leaf}}-{{far_side}}"
 															aria-expanded="false"
-															aria-controls="{{leaf}}-{{far_side}}">
+															aria-controls="{{leaf}}-{{far_side}}"
+															data-parent="#infoPanels">
 														{{ health }}
 														</a>
 													</td>
@@ -79,19 +81,30 @@ Scope Creeps
 								{% endfor %}
 								</tbody>
 							</table>
-							{% for pair in capacities %}
-								{% set near, far, details = pair %}
-								<div class="collapse" id="{{near}}-{{far}}">
-									<div class="well">
-									  <h3>{{ near }} --> {{ far }}</h3>
-									  {% for node, capacity in details.items() %}
-											{{ node }}
-											{{ capacity }}
-											</br>
-										{% endfor %}
-									</div>
+							<div id="infoPanels">
+						    <div class="panel">
+									{% for pair in capacities %}
+										{% set near, far, details = pair %}
+										<div class="collapse" id="{{near}}-{{far}}"">
+											<div class="well">
+											  <h3>{{ near }} --> {{ far }}</h3>
+											  {% for node, capacity in details.items() %}
+													{% set values = [] %}
+													{% for peer, value in capacity.items() if value > 0 %}
+														{% do values.append([peer, value]) %}
+													{% endfor %}
+													{% if values %}
+														{% for v in values %}
+															{{ v[0] }} ({{v[1]}})
+														{% endfor %}
+														</br>
+													{% endif %}
+												{% endfor %}
+											</div>
+										</div>
+									{% endfor %}
 								</div>
-							{% endfor %}
+							</div>
 						</div>
 					</div>
 				</div>

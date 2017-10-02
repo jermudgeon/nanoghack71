@@ -7,8 +7,8 @@ from flask_bootstrap import Bootstrap
 from random import randint
 
 INFLUX_ENDPOINT = 'http://'
-LEAF_DATA_URL = 'http://199.187.223.134:8000/latest.json'
-CAPACITIES_DATA_URL = 'http://199.187.223.134:8000/capacities.json'
+LEAF_DATA_URL = 'http://199.187.216.240:8000/latest.json'
+CAPACITIES_DATA_URL = 'http://199.187.216.240:8000/capacities.json'
 
 app = Flask(__name__)
 Bootstrap(app)
