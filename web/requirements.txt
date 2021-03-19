@@ -7,7 +7,7 @@ Flask-Bootstrap==3.3.7.1
 idna==2.6
 influxdb==4.1.1
 itsdangerous==0.24
-Jinja2==2.9.6
+Jinja2==2.11.3
 MarkupSafe==1.0
 pip==9.0.1
 python-dateutil==2.6.1
