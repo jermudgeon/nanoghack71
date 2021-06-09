@@ -9,7 +9,7 @@ influxdb==4.1.1
 itsdangerous==0.24
 Jinja2==2.9.6
 MarkupSafe==1.0
-pip==9.0.1
+pip==19.2
 python-dateutil==2.6.1
 pytz==2017.2
 requests==2.18.4
